@@ -172,7 +172,7 @@ class GridNet(object):
             color_values = Heat.get_grey_values(matrix).transpose((1, 2, 0))
         
         img = Image.fromarray(color_values)
-        img = img.resize((self.n_y*scale, self.n_x*scale))
+        img = img.resize((self.n_x*scale, self.n_y*scale))
         return img
     
     def path2vec(self, path):
