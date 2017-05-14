@@ -145,7 +145,7 @@ class GridNet(object):
 
     def idx2ij(self, idx):
         if self.check_idx(idx):
-            i = idx / self.n_x
+            i = idx // self.n_x
             j = idx % self.n_x
             return i, j
         else:
