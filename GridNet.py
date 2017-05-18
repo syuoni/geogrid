@@ -1,4 +1,4 @@
-# Update: 2017-05-03
+# Update: 2017-05-18
 import numpy as np
 from Coord2Dist import Coord2Dist as C2D
 from PIL import Image
@@ -160,19 +160,7 @@ class GridNet(object):
     
     def vec2img(self, vec, scale=1, use_color=True):
         matrix = vec.reshape((self.n_y, self.n_x))
-        min_v, max_v = np.min(matrix), np.max(matrix)
-        if min_v == max_v:
-            min_v -= 0.5
-            max_v += 0.5
-        matrix = (matrix - min_v) / (max_v - min_v)
-        
-        if use_color:
-            color_values = Heat.get_color_values(matrix).transpose((1, 2, 0))
-        else:
-            color_values = Heat.get_grey_values(matrix).transpose((1, 2, 0))
-        
-        img = Image.fromarray(color_values)
-        img = img.resize((self.n_x*scale, self.n_y*scale))
+        img = Matrix2Img.matrix2img(matrix, scale=scale, use_color=use_color)
         return img
     
     def path2vec(self, path):
@@ -200,6 +188,36 @@ class GridNet(object):
                     idx = self.ij2idx((i, j))
                     vec[idx] = 1
         return vec
+    
+class Matrix2Img(object):
+    @staticmethod
+    def matrix2img(matrix, scale=1, use_color=True):
+        n_y, n_x = matrix.shape
+        min_v, max_v = np.min(matrix), np.max(matrix)
+        if min_v == max_v:
+            min_v -= 0.5
+            max_v += 0.5
+        matrix = (matrix - min_v) / (max_v - min_v)
+        
+        if use_color:
+            color_values = Heat.get_color_values(matrix).transpose((1, 2, 0))
+        else:
+            color_values = Heat.get_grey_values(matrix).transpose((1, 2, 0))
+        
+        img = Image.fromarray(color_values)
+        img = img.resize((n_x*scale, n_y*scale))
+        return img
+    
+    @staticmethod
+    def add_background(img, bg_img):
+        img_data = np.array(img)
+        bg_data = np.array(bg_img.resize(img.size))
+        assert img_data.shape[-1] == 3 and bg_data.shape[-1] == 4
+        
+        # show img where backgroud is transparent entirely
+        img_data = np.where(bg_data[:, :, 3:4]==0, img_data, bg_data[:, :, 0:3])
+        return Image.fromarray(img_data)
+    
     
 if __name__ == '__main__':
     GN = GridNet(400, 400, (121.24, 121.66), (31.02, 31.38))
