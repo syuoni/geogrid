@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Update at 2017-05-03
 import numpy as np
 
