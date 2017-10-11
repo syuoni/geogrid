@@ -1,4 +1,4 @@
-# last modification: 2017-05-03
+# -*- coding: utf-8 -*-
 import numpy as np
 from scipy.interpolate import interp1d
 from PIL import Image, ImageDraw, ImageFont

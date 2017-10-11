@@ -1,4 +1,4 @@
-# Update: 2017-05-18
+# -*- coding: utf-8 -*-
 import numpy as np
 from Coord2Dist import Coord2Dist as C2D
 from PIL import Image
